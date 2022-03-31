@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+        html {
+            height: 100%;
+        }
+        body {
+            background: rgb(203,233,111);
+            background: linear-gradient(0deg, rgba(203,233,111,1) 0%, rgba(143,216,234,1) 90%, rgba(126,202,192,1) 100%);
+        }
+        div#content {
+            display: flex;
+            flex-direction:row;
+            align-items: normal;
+            margin: 0 auto;
+            padding: 70px 0;
+            width: 800px;
+        }
+        #canvas {
+            margin: 10px 10px 0 0;
+            display: block;
+            width: 500px;
+            height: 500px;
+            border-radius: 10px;
+        }
+        .invisivel {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity .5s linear;
+        }
+        .visivel {
+            visibility: visible;
+            opacity: 1;
+        }
+        textarea#title {
+            font-size: 12pt;
+            padding: 10px;
+            margin-bottom:5px;
+            box-sizing: border-box;
+            height:80px;
+            font-family: 'Roboto', sans-serif;
+            border: 1px solid #1b4946;
+            border-radius: 10px;
+            color: #677b72;
+        }
+        div.contadorTitle, div.contadorBody {
+            font-size: 9pt;
+            text-align: right;
+            margin-bottom: 10px;
+            font-style: italic;
+            color: #1b4946;
+        }
+        input#link {
+            font-size: 12pt;
+            padding: 10px;
+            margin-bottom:15px;
+            box-sizing: border-box;
+            border: 1px solid #1b4946;
+            border-radius: 10px;
+            color: #677b72;
+        }
+        div#formCard {
+            display: flex;
+            flex-direction: column;
+            align-items: normal;
+            font-family: 'Roboto', sans-serif;
+            margin-right: 25px;
+        }
+        div#formCard h1 {
+            margin: 0 0 10px 0;
+            color: #1b4946;
+            font-size: 2.098em;
+        }
+        select.unidades {
+            height: 40px;
+            padding: 10px;
+            margin-bottom:15px;
+            font-size:12pt;
+            font-family: 'Roboto', sans-serif;
+            border: 1px solid #1b4946;
+            border-radius: 10px;
+            color: #677b72;
+        }
+        textarea#textBody {
+            font-size: 12pt;
+            padding: 10px;
+            margin-bottom:5px;
+            height: 130px;
+            font-family: 'Roboto', sans-serif;
+            border: 1px solid #1b4946;
+            border-radius: 10px;
+            color: #677b72;
+        }
+        button#generate {
+            border-radius:30px;
+            padding:10px 20px;
+            background-color:#439e6e;
+            border:1px solid #1d6c26;
+            text-shadow:0px 1px 0px #224c1c;
+            color:#ffffff;
+            cursor:pointer;
+            margin-bottom:10px;
+        }
+        button#generate:hover {
+            background-color:#1a9b72;
+        }
+        a#downloadLnk {
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration:underline;
+            margin-right: 7px;
+            color: #0964dc;
+        }
+        div.download {
+            text-align: right;
+            color: #1b4946;
+        }

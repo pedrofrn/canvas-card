@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Card constructor</title>
+    <description>Image card created by HTML canvas tag</description>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="content">
+        <div id="formCard">
+            <h1>Construtor de card</h1>
+            <select name="select" class="unidades">
+                <option value="">Selecione uma unidade</option>
+                <option value="ifbaiano">IF Baiano (principal)</option>
+                <option value="alagoinhas">Campus Alagoinhas</option>
+                <option value="lapa">Campus Bom Jesus da Lapa</option>
+                <option value="catu">Campus Catu</option>
+                <option value="gmb">Campus Governador Mangabeira</option>
+                <option value="guanambi">Campus Guanambi</option>
+                <option value="itaberaba">Campus Itaberaba</option>
+                <option value="itapetinga">Campus Itapetinga</option>
+                <option value="santaines">Campus Santa Inês</option>
+                <option value="bonfim">Campus Senhor do Bonfim</option>
+                <option value="serrinha">Campus Serrinha</option>
+                <option value="teixeira">Campus Teixeira de Freitas</option>
+                <option value="urucuca">Campus Uruçuca</option>
+                <option value="valenca">Campus Valença</option>
+                <option value="xiquexique">Campus Xique-Xique</option>
+            </select>
+
+            <textarea type="text" id="title" placeholder="Título (até 90 caracteres)" maxlength="90"></textarea>
+            <div class="contadorTitle"></div>
+            <textarea type="text" id="textBody" placeholder="Corpo do texto (até 370 caracteres)" maxlength="370"></textarea>
+            <div class="contadorBody"></div>
+            <input type="text" id="link" placeholder="Insira um link"/>
+            <button id="generate">GERAR CARD</button>
+            <div class="download"><a id="downloadLnk" class="invisivel" download="YourFileName.jpg" style="cursor:pointer;">Baixar o arquivo</a><span class="fileSize"></span></div>
+        </div>
+        <canvas class="invisivel" id="canvas"></canvas>
+    </div>
+    <script src="card-generator.js"></script>
+</body>
+</html>
