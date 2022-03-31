@@ -1,10 +1,17 @@
 let canvas, ctx, oldTxt, f, yHeight, background, image;
+let content = document.querySelector('div#content');
+canvas = document.getElementById('canvas');
 let txtTitle = document.getElementById('title');
 let txtBody = document.getElementById('textBody');
 const downloadLnk = document.querySelector('a#downloadLnk');
 let contadorTitle = document.querySelector('div.contadorTitle');
 let contadorBody = document.querySelector('div.contadorBody');
+let formCard = document.querySelector('div#formCard');
 let countClick = 0;
+
+window.onload = function () {
+    formCard.parentNode.insertBefore(instructions(), formCard.nextSibling);
+};
 
 txtTitle.addEventListener('keyup', () => {
     contadorTitle.innerText = txtTitle.value.length === 1 ? txtTitle.value.length + ' caractere' : txtTitle.value.length + ' caracteres';
@@ -26,10 +33,14 @@ const bgImage = new Image;
 const link = document.getElementById('link');
 const qrImage = new Image;
 qrImage.crossOrigin = 'anonymous';
+canvas.classList.add('displayNone');
 
 document.getElementById('generate').addEventListener('click', (ev) => {
-    if (txtTitle.value.length > 3) {
-        canvas = document.getElementById('canvas');
+    if (txtTitle.value.length > 3 && unidade.value !== '' && txtBody.value.length > 5) {
+        console.log('loaded');
+        let pInstructions = document.querySelector('p.texto');
+        pInstructions.style.display = 'none';
+        content.classList.add('flexContent');
         ctx = canvas.getContext('2d');
         canvas.width = 1080;
         canvas.height = 1080;
@@ -52,24 +63,50 @@ document.getElementById('generate').addEventListener('click', (ev) => {
                 ctx.font = `bold 15px Roboto, Tahoma`;
                 link.value !== '' ? ctx.fillText(formatLink(link.value), 153, 1030) : linkUnidades();
                 canvas.classList.remove('displayNone');
-                
+
                 console.log('segundo then');
                 setTimeout(() => {
                     if (countClick === 0) {
                         canvas.classList.toggle('visivel');
-                        image = canvas.toDataURL('image/jpeg');
-                        let fileSize = (image.length * (3 / 4)) - (image.substr(image.length - 2) === '==' ? 2 : 1);
-                        let spanFileSize = document.querySelector('span.fileSize');
-                        spanFileSize.innerText = '(' + (fileSize / 1000).toFixed(0) + ' kB' + ')';
+
                         downloadLnk.classList.toggle('visivel');
                     }
+                    image = canvas.toDataURL('image/jpeg');
+                    let fileSize = (image.length * (3 / 4)) - (image.substr(image.length - 2) === '==' ? 2 : 1);
+                    let spanFileSize = document.querySelector('span.fileSize');
+                    spanFileSize.innerText = '(' + (fileSize / 1000).toFixed(0) + ' kB' + ')';
                     countClick++;
-                }, 100);
+                }, 300);
             });
 
 
-    } else {
-        console.log('é preciso preencher o campo tal', txtTitle.value.length);
+    }
+    if (txtTitle.value.length <= 3) {
+        let titleMessage = txtTitle.parentNode.insertBefore(warnValidation('O campo título deve ter 4 caracteres no mínimo.'), txtTitle.nextSibling);
+        setTimeout(() => { 
+            titleMessage.classList.toggle('invisivel');
+         }, 4000);
+         setTimeout(() => { 
+            titleMessage.remove()
+         }, 4200);
+    }
+    if (unidade.value === '') {
+        let unidadeMessage = unidade.parentNode.insertBefore(warnValidation('Selecione uma unidade para continuar.'), unidade.nextSibling);
+        setTimeout(() => { 
+            unidadeMessage.classList.toggle('invisivel');
+         }, 4000);
+         setTimeout(() => { 
+            unidadeMessage.remove()
+         }, 4200);
+    }
+    if (txtBody.value.length <= 5) {
+        let bodyMessage = txtBody.parentNode.insertBefore(warnValidation('O corpo do card deve ter mais de 5 caracteres.'), txtBody.nextSibling);
+        setTimeout(() => { 
+            bodyMessage.classList.toggle('invisivel');
+         }, 4000);
+         setTimeout(() => { 
+            bodyMessage.remove()
+         }, 4200);
     }
 });
 
@@ -87,24 +124,25 @@ const drawText = function () {
     ctx.fillText(`Escaneie o código`, 300, 940);
     ctx.fillText(`de barras ao lado usando`, 300, 965);
     ctx.fillText(`a câmera do celular.`, 300, 990);
-
     ctx.direction = 'ltr';
-
     ctx.textAlign = 'right';
     ctx.font = `normal 18px Roboto, Tahoma`;
     ctx.fillText(`IMAGEM CRIADA ÀS ${time} DO DIA ${dateFormat}`, 1000, 80);
-
     ctx.textAlign = 'start';
-
     const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
     gradient.addColorStop('0', '#eaffe7');
-    //gradient.addColorStop('0.5', '#fff');
     gradient.addColorStop('1.0', '#40ff66');
     ctx.fillStyle = gradient;
-
     consolideText(ctx, txtTitle.value, 80, !txtBody.value ? 400 : 250, 850, 'title');
     ctx.fillStyle = '#c4ebc5';
     consolideText(ctx, txtBody.value, 80, yHeight + 80, txtTitle.value.length > 30 && txtTitle.value.length < 40 ? 920 : 800, 'body');
+}
+
+function warnValidation(message) {
+    const warning = document.createElement('div');
+    warning.classList.add('warning');
+    warning.innerText = message;
+    return warning;
 }
 
 function linkUnidades() {
@@ -269,6 +307,13 @@ function backgroundSelect(value) {
     return bgImage;
 }
 
+function instructions() {
+    const pText = document.createElement('p');
+    pText.innerHTML = `Aplicação desenvolvida para auxiliar na emissão de cards para divulgação em redes sociais. O campo <b><i>Selecione uma unidade</i></b> dispõe o fundo da imagem com a marca do campus escolhido, além de, caso o campo <b><i>Insira um link</i></b> não seja preenchido, insere o código QR vinculado ao endereço da unidade específica. Os campos <b><i>Título</i></b> e <b><i>Corpo do card</i></b> possuem restrição de caracteres, sendo 90 e 370 no máximo, respectivamente, e compõem as informações textuais principais da imagem. O endereço inserido no campo <b><i>Insira um link</i></b> gera um código para escaneamento pela câmera do celular, além de dispor, em texto, o endereço abaixo do código gerado. Após a visualização do card, o mesmo poderá ser baixado localmente.`;
+    pText.classList.add('texto');
+    return pText;
+}
+
 function consolideText(context, text, x, y, fitWidth, place) {
     let fontSize = function () {
         if (text.length < 40 && text.length > 20 && place === 'title') {
@@ -304,22 +349,8 @@ function consolideText(context, text, x, y, fitWidth, place) {
             if (idx === 1) {
                 idx = 2;
             }
-
-            /* //console.log('txtbody', txtBody.value.split('\n'));
-
-            if (text.indexOf('\n') !== -1) {
-                //console.log('identificou a quebra de linha', wordsCT);
-                for (let i in wordsCT) {
-                    //console.log(i);
-                    console.log(wordsCT[i].indexOf('\n'));
-                    context.fillText(wordsCT[i], x, y + (lineHeight * currentLine));
-                }
-            } */
-            //console.log(wordsCT.slice(0, idx - 1).join(' '));
             let lineWords = wordsCT.slice(0, idx - 1).join(' ');
-            //console.log(lineWords.indexOf('\n') !== -1 ? lineWords.split(lineWords.indexOf('\n')));
             console.log(lineWords.split(enter, 3)[1]);
-
             context.fillText(wordsCT.slice(0, idx - 1).join(' '), x, y + (lineHeight * currentLine));
             context.fillText(' ', x, y + (lineHeight * currentLine));
             currentLine++;
