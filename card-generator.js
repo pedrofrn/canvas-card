@@ -9,14 +9,17 @@ let contadorBody = document.querySelector('div.contadorBody');
 let formCard = document.querySelector('div#formCard');
 let countClick = 0;
 
+// print instructions on screen 
 window.onload = function () {
     formCard.parentNode.insertBefore(instructions(), formCard.nextSibling);
 };
 
+// count digited chars
 txtTitle.addEventListener('keyup', () => {
     contadorTitle.innerText = txtTitle.value.length === 1 ? txtTitle.value.length + ' caractere' : txtTitle.value.length + ' caracteres';
 });
 
+// count digited chars
 txtBody.addEventListener('keyup', () => {
     contadorBody.innerText = txtBody.value.length === 1 ? txtBody.value.length + ' caractere' : txtBody.value.length + ' caracteres';
 });
@@ -29,15 +32,14 @@ unidade.addEventListener('change', () => {
     background = backgroundSelect(unidade.value);
 })
 const bgImage = new Image;
-//bgImage.crossOrigin = 'anonymous';
 const link = document.getElementById('link');
 const qrImage = new Image;
 qrImage.crossOrigin = 'anonymous';
 canvas.classList.add('displayNone');
 
+// catch the button click and start the canvas
 document.getElementById('generate').addEventListener('click', (ev) => {
     if (txtTitle.value.length > 3 && unidade.value !== '' && txtBody.value.length > 5) {
-        console.log('loaded');
         let pInstructions = document.querySelector('p.texto');
         pInstructions.style.display = 'none';
         content.classList.add('flexContent');
@@ -46,13 +48,14 @@ document.getElementById('generate').addEventListener('click', (ev) => {
         canvas.height = 1080;
         ctx.fillStyle = '#94d095';
         ctx.drawImage(background, 0, 0);
+        
+        // run the qr code display
         fetch('https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=' + (link.value !== '' ? link.value : qrUnidades()))
             .then(() => {
                 qrImage.src = 'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=' + (link.value !== '' ? link.value : qrUnidades());
                 qrImage.onload = function () {
                     ctx.drawImage(qrImage, 80, 800);
                 };
-                console.log('primeiro then');
             })
             .then(() => {
                 drawText();
@@ -64,23 +67,23 @@ document.getElementById('generate').addEventListener('click', (ev) => {
                 link.value !== '' ? ctx.fillText(formatLink(link.value), 153, 1030) : linkUnidades();
                 canvas.classList.remove('displayNone');
 
-                console.log('segundo then');
                 setTimeout(() => {
                     if (countClick === 0) {
                         canvas.classList.toggle('visivel');
-
                         downloadLnk.classList.toggle('visivel');
                     }
                     image = canvas.toDataURL('image/jpeg');
+                    
+                    // display the size of generated file
                     let fileSize = (image.length * (3 / 4)) - (image.substr(image.length - 2) === '==' ? 2 : 1);
                     let spanFileSize = document.querySelector('span.fileSize');
                     spanFileSize.innerText = '(' + (fileSize / 1000).toFixed(0) + ' kB' + ')';
                     countClick++;
                 }, 300);
             });
-
-
     }
+    
+    // form fields validation
     if (txtTitle.value.length <= 3) {
         let titleMessage = txtTitle.parentNode.insertBefore(warnValidation('O campo título deve ter 4 caracteres no mínimo.'), txtTitle.nextSibling);
         setTimeout(() => { 
@@ -110,12 +113,10 @@ document.getElementById('generate').addEventListener('click', (ev) => {
     }
 });
 
+// fill the canvas with text
 const drawText = function () {
     ctx.fillStyle = '#72bc72';
-    //textAlign center, left, right, end, start
-    //textBaseline top, hanging, middle, bottom,ideographic, alphabetic
     ctx.textBaseline = 'alphabetic';
-    //direction ltr, rtl, inherit
     ctx.fillStyle = '#94d095';
     ctx.font = `bold 20px Roboto, Tahoma`;
     ctx.fillText(`Código QR`, 300, 910);
@@ -138,6 +139,7 @@ const drawText = function () {
     consolideText(ctx, txtBody.value, 80, yHeight + 80, txtTitle.value.length > 30 && txtTitle.value.length < 40 ? 920 : 800, 'body');
 }
 
+// create field validation element
 function warnValidation(message) {
     const warning = document.createElement('div');
     warning.classList.add('warning');
@@ -145,6 +147,7 @@ function warnValidation(message) {
     return warning;
 }
 
+// bind the value of select with the address shown below the qr
 function linkUnidades() {
     ctx.fillStyle = '#56e83a';
     ctx.font = `bold 15px Roboto, Tahoma`;
@@ -197,6 +200,7 @@ function linkUnidades() {
     }
 }
 
+// bind the value of select with the address of the qr code
 function qrUnidades() {
     if (link.value === '') {
         if (unidade.value === 'ifbaiano') {
@@ -247,6 +251,7 @@ function qrUnidades() {
     }
 }
 
+// eliminate the https and slash in the shown link
 function formatLink(param) {
     let linkTxt = param;
     if (linkTxt.indexOf('//') !== -1) {
@@ -258,6 +263,7 @@ function formatLink(param) {
     return linkTxt;
 }
 
+// choose background image from select value
 function backgroundSelect(value) {
     if (value === 'ifbaiano') {
         bgImage.src = './images/background-geral.jpg';
@@ -307,6 +313,7 @@ function backgroundSelect(value) {
     return bgImage;
 }
 
+// create instructions element
 function instructions() {
     const pText = document.createElement('p');
     pText.innerHTML = `Aplicação desenvolvida para auxiliar na emissão de cards para divulgação em redes sociais. O campo <b><i>Selecione uma unidade</i></b> dispõe o fundo da imagem com a marca do campus escolhido, além de, caso o campo <b><i>Insira um link</i></b> não seja preenchido, insere o código QR vinculado ao endereço da unidade específica. Os campos <b><i>Título</i></b> e <b><i>Corpo do card</i></b> possuem restrição de caracteres, sendo 90 e 370 no máximo, respectivamente, e compõem as informações textuais principais da imagem. O endereço inserido no campo <b><i>Insira um link</i></b> gera um código para escaneamento pela câmera do celular, além de dispor, em texto, o endereço abaixo do código gerado. Após a visualização do card, o mesmo poderá ser baixado localmente.`;
@@ -314,6 +321,7 @@ function instructions() {
     return pText;
 }
 
+// takes the typed text, selects font size and arranges the line break in the proposed space
 function consolideText(context, text, x, y, fitWidth, place) {
     let fontSize = function () {
         if (text.length < 40 && text.length > 20 && place === 'title') {
@@ -327,7 +335,6 @@ function consolideText(context, text, x, y, fitWidth, place) {
             return '30px';
         }
     };
-
     let lineHeight = Number(fontSize().replace('px', '')) + 10;
     let fontWeight = place === 'title' ? 700 : 300;
     fitWidth = fitWidth || 0;
@@ -336,10 +343,7 @@ function consolideText(context, text, x, y, fitWidth, place) {
         context.fillText(text, x, y);
         return;
     }
-
-    let wordsCT = text.split(' ') //text.split('\n');
-    let enter = '\n';
-
+    let wordsCT = text.split(' ') //text.split('\n'); I tried unsuccessfully to collect the enter typed in the textarea and reproduce it on the canvas screen
     let currentLine = 0;
     let idx = 1;
     while (wordsCT.length > 0 && idx <= wordsCT.length) {
@@ -349,10 +353,7 @@ function consolideText(context, text, x, y, fitWidth, place) {
             if (idx === 1) {
                 idx = 2;
             }
-            let lineWords = wordsCT.slice(0, idx - 1).join(' ');
-            console.log(lineWords.split(enter, 3)[1]);
             context.fillText(wordsCT.slice(0, idx - 1).join(' '), x, y + (lineHeight * currentLine));
-            context.fillText(' ', x, y + (lineHeight * currentLine));
             currentLine++;
             wordsCT = wordsCT.splice(idx - 1);
             idx = 1;
@@ -367,6 +368,7 @@ function consolideText(context, text, x, y, fitWidth, place) {
     yHeight = y + (lineHeight * currentLine);
 }
 
+// download created canvas image
 function download() {
     downloadLnk.download = `card-${unidade.value}-${dateFormat.replace(/\//ig, '-')}-${time}`;
     this.href = image;
