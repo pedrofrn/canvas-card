@@ -25,7 +25,7 @@ txtBody.addEventListener('keyup', () => {
 });
 
 const date = new Date();
-const dateFormat = date.getDate() + '/' + ((Number(date.getMonth()) + 1) < 10 ? '0' + (Number(date.getMonth()) + 1) : (Number(date.getMonth()) + 1)) + '/' + date.getFullYear();
+const dateFormat = (Number(date.getDate()) < 10 ? '0' + Number(date.getDate()) : Number(date.getDate())) + '/' + ((Number(date.getMonth()) + 1) < 10 ? '0' + (Number(date.getMonth()) + 1) : (Number(date.getMonth()) + 1)) + '/' + date.getFullYear();
 const time = (date.getHours() < 10 ? '0' + date.getHours() + 'h' : date.getHours() + 'h') + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
 const unidade = document.querySelector('select');
 unidade.addEventListener('change', () => {
